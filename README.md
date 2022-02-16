@@ -2,22 +2,25 @@
 
 ## Command when Manual run locally
 
-terraform init
+1.terraform init
 
-terraform workspace new dev
+2.terraform workspace new dev
 
-terraform plan  --var-file .\environments\dev.tfvars
-terraform apply --var-file .\environments\dev.tfvars --auto-approve
+3.terraform plan  --var-file .\environments\dev.tfvars
+
+4.terraform apply --var-file .\environments\dev.tfvars --auto-approve
 
 TO destroy:
 
-terraform destroy --var-file .\environments\dev.tfvars --auto-approve
+1.terraform destroy --var-file .\environments\dev.tfvars --auto-approve
 
 Note:--auto-approve is used when u dont wnat to answer confirmation prompt
 
 ## Commands in pipeline
 
-environment 
+Configuration in pipeline
+
+1.environment 
     {
         .
         .
@@ -36,11 +39,17 @@ environment
             {
                 sh '''
                     echo "**********************************$(date "+%m%d%Y %T") : Running terraform init**********************************"
+                    
                     cd ecs-terraform
+                    
                     cd Terraform
+                    
                     ls -ltr
+                    
                     terraform init
+                    
                     terraform workspace select $INFRA_ENVIRONMENT || terraform workspace new $INFRA_ENVIRONMENT
+                    
                     terraform plan -var-file ./environments/$INFRA_ENVIRONMENT.tfvars
                 '''  
             }
@@ -49,15 +58,19 @@ environment
             steps {
                 script {
                     def userInput = input(id: 'Proceed1', message: 'Promote build?', parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']])
+                    
                     echo 'userInput: ' + userInput
 
                     if(userInput == true) {
                                 sh '''
                                     cd ecs-terraform
+                                    
                                     cd Terraform
+                                    
                                     terraform apply --var-file ./environments/$INFRA_ENVIRONMENT.tfvars --auto-approve
                                 '''             
                     } else {
+                    
                         echo "Action was aborted."
                     }
 
