@@ -16,68 +16,6 @@ TO destroy:
 
 Note:--auto-approve is used when u dont wnat to answer confirmation prompt
 
-## Commands in pipeline
-
-Configuration in pipeline
-
-1.environment 
-    {
-        .
-        .
-        .
-        
-        INFRA_ENVIRONMENT = "dev"
-        .
-        .
-        .
-    }
-    
-    
- stage('initializing the terraform') 
-        {
-            steps 
-            {
-                sh '''
-                    echo "**********************************$(date "+%m%d%Y %T") : Running terraform init**********************************"
-                    
-                    cd ecs-terraform
-                    
-                    cd Terraform
-                    
-                    ls -ltr
-                    
-                    terraform init
-                    
-                    terraform workspace select $INFRA_ENVIRONMENT || terraform workspace new $INFRA_ENVIRONMENT
-                    
-                    terraform plan -var-file ./environments/$INFRA_ENVIRONMENT.tfvars
-                '''  
-            }
-        }
-                stage("Approval Stage") {
-            steps {
-                script {
-                    def userInput = input(id: 'Proceed1', message: 'Promote build?', parameters: [[$class: 'BooleanParameterDefinition', defaultValue: true, description: '', name: 'Please confirm you agree with this']])
-                    
-                    echo 'userInput: ' + userInput
-
-                    if(userInput == true) {
-                                sh '''
-                                    cd ecs-terraform
-                                    
-                                    cd Terraform
-                                    
-                                    terraform apply --var-file ./environments/$INFRA_ENVIRONMENT.tfvars --auto-approve
-                                '''             
-                    } else {
-                    
-                        echo "Action was aborted."
-                    }
-
-                }    
-            }  
-        }
-
 
 ## Commands to SSH into ec2 isntance
 
