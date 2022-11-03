@@ -20,7 +20,7 @@ Consists of 2 files
 - terraform_workflow.yaml which observes the changes in ./terraform folder and makes the changes to infrastructure
 - deploy_workflow.yaml which observes changes in ./src folder and builds the image pushes to ECR repo and deploy to ECS cluster.
 
-Terraform commands when Manual run locally
+Terraform commands on Manual run locally
 
 1.terraform init
 
