@@ -5,7 +5,9 @@ This repo consists of a simple node js application, containerized using Docker a
 
 ## Set of folders:
 ./src: Containing Source Code and Docker file
+
 ./terraform: IAC configuration
+
 ./.github: Pipeline scripts
 
 Functionality:
